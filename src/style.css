@@ -46,3 +46,11 @@ body {
 #prevBtn {
 	display: none;
 }
+
+.table-css {
+	width: 100%;
+}
+
+th {
+	color: yellow;
+}
