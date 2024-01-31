@@ -1,6 +1,7 @@
+let currentPage = 1;
 const url = "https://swapi.dev/api/";
-let peopleUrl = `${url}people/?page=1`;
-let shipsUrl = `${url}starships/?page=1`;
+let peopleUrl = `${url}people/?page=`;
+let shipsUrl = `${url}starships/?page=`;
 
 //  function get info (fetch)
 //  function show info table
@@ -22,8 +23,9 @@ loader.style.display = "none";
 // functions
 
 function getPeople() {
+  loader.style.display = "block";
   // get people func
-  return fetch(peopleUrl)
+  return fetch(`${peopleUrl}${currentPage}`)
     .then((res) => res.json())
     .then((people) => {
       peopleFromApi = people.results; // store the people in a variable
@@ -32,38 +34,39 @@ function getPeople() {
       console.log("ERROR", error);
     });
 }
-getPeople();
+// getPeople();
 
 function getShips() {
+  loader.style.display = "block";
   // get ships func
-  return fetch(shipsUrl)
+  return fetch(`${shipsUrl}${currentPage}`)
     .then((res) => res.json())
     .then((ships) => {
-      shipsFromApi = ships.results;
+      shipsFromApi = ships.results; // store the ships in a variable
     })
     .catch((error) => {
       console.log("ERROR", error);
     });
 }
-getShips();
+// getShips();
 
 function showPeople(event) {
-  loader.style.display = "block";
-  let tableRows = "";
-  console.log(peopleFromApi);
-  peopleFromApi.forEach((person) => {
-    tableRows += `
-    <tr>
-    <td>${person.name}</td>
-    <td>${person.height}</td>
-    <td>${person.mass}</td>
-    <td>${person.gender}</td>
-    <td>${person.birth_year}</td>
-    <td>${person.films.length}</td>
-    </tr>
-    `;
+  getPeople()
+  .then(() => {
+    let tableRows = "";
+    console.log(peopleFromApi);
+    peopleFromApi.forEach((person) => {
+      tableRows += `
+      <tr>
+      <td>${person.name}</td>
+      <td>${person.height}</td>
+      <td>${person.mass}</td>
+      <td>${person.gender}</td>
+      <td>${person.birth_year}</td>
+      <td>${person.films.length}</td>
+      </tr>
+      `;
   });
-
   resultDiv.innerHTML = "";
   resultDiv.innerHTML = `
     <table class="table-css">
@@ -78,39 +81,64 @@ function showPeople(event) {
     ${tableRows}  
     </table>
     `;
+    loader.style.display = "none";
+    
+  })
+  .catch((error) => {
+    console.log("ERROR", error);
+    loader.style.display = "none";
+  });
+  nextBtn.style.display = "block";
+  prevBtn.style.display = "block";
 }
 
 function showShips(event) {
-  let tableRows = "";
-  console.log(shipsFromApi);
-  shipsFromApi.forEach((ship) => {
-    tableRows += `
-    <tr>
-    <td>${ship.name}</td>
-    <td>${ship.model}</td>
-    <td>${ship.manufacturer}</td>
-    <td>${ship.cost_in_credits}</td>
-    <td>${ship.cargo_capacity}</td>
-    <td>${ship.starship_class}</td>
-    </tr>
-    `;
-  });
+  getShips()
+  .then(() => {
+    let tableRows = "";
+    console.log(shipsFromApi);
 
-  resultDiv.innerHTML = "";
-  resultDiv.innerHTML = `
-    <table class="table-css">
-    <tr>
-    <th>Name</th>
-    <th>Model</th>
-    <th>Manufacturer</th>
-    <th>Cost</th>
-    <th>People Capacity</th>
-    <th>Class</th>
-    </tr>
-    ${tableRows}  
-    </table>
-    `;
+    shipsFromApi.forEach((ship) => {
+      tableRows += `
+      <tr>
+      <td>${ship.name}</td>
+      <td>${ship.model}</td>
+      <td>${ship.manufacturer}</td>
+      <td>${ship.cost_in_credits}</td>
+      <td>${ship.cargo_capacity}</td>
+      <td>${ship.starship_class}</td>
+      </tr>
+      `;
+    });
+  
+    resultDiv.innerHTML = "";
+    resultDiv.innerHTML = `
+      <table class="table-css">
+      <tr>
+      <th>Name</th>
+      <th>Model</th>
+      <th>Manufacturer</th>
+      <th>Cost</th>
+      <th>People Capacity</th>
+      <th>Class</th>
+      </tr>
+      ${tableRows}  
+      </table>
+      `;
+      loader.style.display = "none";
+  })
+  nextBtn.style.display = "block";
+  prevBtn.style.display = "block";
 }
+
 
 peopleBtn.addEventListener("click", showPeople);
 shipsBtn.addEventListener("click", showShips);
+nextBtn.addEventListener("click", () => {
+  currentPage++;
+  showPeople();
+})
+prevBtn.addEventListener("click", () => {
+  currentPage--;
+  showPeople();
+})

@@ -54,3 +54,8 @@ body {
 th {
 	color: yellow;
 }
+
+td {
+	color: #ffffff;
+	font-size: 16px;
+}
