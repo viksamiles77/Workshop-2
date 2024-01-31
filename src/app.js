@@ -58,7 +58,7 @@ function showPeople(people) {
     `;
 }
 
-
+showPeople()
 
 
 
