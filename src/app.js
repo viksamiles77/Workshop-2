@@ -34,9 +34,22 @@ function getPeople() {
     });
 }
 
-
 function showPeople(people) {
-    return `
+  let tableRows = "";
+  people.forEach((people) => {
+    tableRows += `
+    <tr>
+    <td>${people.name}</td>
+    <td>${people.height}</td>
+    <td>${people.mass}</td>
+    <td>${people.gender}</td>
+    <td>${people.birth_year}</td>
+    <td>${people.films.length}</td>
+    </tr>
+    `;
+  });
+
+  return `
     <table>
     <tr>
     <th>Name</th>
@@ -46,28 +59,12 @@ function showPeople(people) {
     <th>Birth Year</th>
     <th>Appearances</th>
     </tr>
-    <tr>
-    <td>${people.name}</td>
-    <td>${people.height}</td>
-    <td>${people.mass}</td>
-    <td>${people.gender}</td>
-    <td>${people.birth_year}</td>
-    <td>${people.films.length}</td>
-    </tr>
+    ${tableRows}  
     </table>
     `;
 }
 
-showPeople()
-
-
-
-
-
-
-
-
-
+showPeople();
 
 function getShips() {
   // get ships func
